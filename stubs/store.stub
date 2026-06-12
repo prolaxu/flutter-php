@@ -1,0 +1,28 @@
+<?php
+
+namespace {{ namespace }};
+
+use FlutterPHP\UIBuilder\Actions\Store\ClearStoreAction;
+use FlutterPHP\UIBuilder\State\Store;
+
+class {{ class }} extends Store
+{
+    public function name(): string
+    {
+        return '{{ storeKey }}';
+    }
+
+    public function initialState(): array
+    {
+        return [
+            'count' => 0,
+        ];
+    }
+
+    public function actions(): array
+    {
+        return [
+            new ClearStoreAction('{{ storeKey }}'),
+        ];
+    }
+}

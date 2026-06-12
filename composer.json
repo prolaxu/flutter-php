@@ -1,0 +1,49 @@
+{
+    "name": "prolaxu/flutter-php",
+    "description": "Build Flutter mobile UIs from PHP. Define screens, components, routes, and stores in PHP — a Flutter renderer turns the JSON manifest into a native app.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Laxman Adhikari",
+            "email": "prolaxu@proton.me",
+            "homepage": "https://github.com/prolaxu"
+        }
+    ],
+    "keywords": ["flutter", "php", "mobile", "ui-builder", "json", "declarative"],
+    "homepage": "https://github.com/prolaxu/flutter-php",
+    "support": {
+        "issues": "https://github.com/prolaxu/flutter-php/issues",
+        "source": "https://github.com/prolaxu/flutter-php"
+    },
+    "require": {
+        "php": "^8.2",
+        "laravel/framework": "^10.0 || ^11.0 || ^12.0 || ^13.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0 || ^11.0 || ^12.0",
+        "laravel/pint": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "FlutterPHP\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "FlutterPHP\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "FlutterPHP\\FlutterPHPServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

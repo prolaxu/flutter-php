@@ -1,0 +1,44 @@
+<?php
+
+namespace {{ namespace }};
+
+use FlutterPHP\UIBuilder\Base\UIComponent;
+use FlutterPHP\UIBuilder\Components\Column;
+use FlutterPHP\UIBuilder\Components\Padding;
+use FlutterPHP\UIBuilder\Components\Scaffold;
+use FlutterPHP\UIBuilder\Components\Spacer;
+use FlutterPHP\UIBuilder\Components\Text as TextComponent;
+use FlutterPHP\UIBuilder\Primitives\FontWeight;
+use FlutterPHP\UIBuilder\Primitives\Padding as PaddingPrimitive;
+use FlutterPHP\UIBuilder\Primitives\Text;
+use FlutterPHP\UIBuilder\Primitives\TextStyle;
+
+class {{ class }}
+{
+    public static function build(): UIComponent
+    {
+        return new Scaffold(
+            title: new Text('{{ title }}'),
+            showBackButton: true,
+            body: new Padding(
+                padding: PaddingPrimitive::all(16),
+                child: new Column(
+                    children: [
+                        new TextComponent(
+                            new Text('{{ title }} Screen', style: new TextStyle(
+                                size: 20,
+                                weight: FontWeight::Bold,
+                            )),
+                        ),
+                        new Spacer(height: 8),
+                        new TextComponent(
+                            new Text('Build your UI in app/MobileUI/Screens/{{ class }}.php', style: new TextStyle(
+                                size: 14,
+                            )),
+                        ),
+                    ],
+                ),
+            ),
+        );
+    }
+}

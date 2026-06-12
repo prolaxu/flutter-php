@@ -1,0 +1,49 @@
+<?php
+
+namespace App\MobileUI\Screens;
+
+use FlutterPHP\UIBuilder\Base\UIComponent;
+use FlutterPHP\UIBuilder\Components\Column;
+use FlutterPHP\UIBuilder\Components\Padding;
+use FlutterPHP\UIBuilder\Components\Scaffold;
+use FlutterPHP\UIBuilder\Components\Spacer;
+use FlutterPHP\UIBuilder\Components\Text as TextComponent;
+use FlutterPHP\UIBuilder\Primitives\FontWeight;
+use FlutterPHP\UIBuilder\Primitives\Padding as PaddingPrimitive;
+use FlutterPHP\UIBuilder\Primitives\Text;
+use FlutterPHP\UIBuilder\Primitives\TextStyle;
+
+class HomeScreen
+{
+    public static function build(): UIComponent
+    {
+        return new Scaffold(
+            title: new Text('{{ appName }}'),
+            showBackButton: false,
+            body: new Padding(
+                padding: PaddingPrimitive::all(16),
+                child: new Column(
+                    children: [
+                        new Spacer(height: 40),
+                        new TextComponent(
+                            new Text('Welcome to {{ appName }}', style: new TextStyle(
+                                size: 24,
+                                weight: FontWeight::Bold,
+                            )),
+                        ),
+                        new Spacer(height: 8),
+                        new TextComponent(
+                            new Text('Start building your app in app/MobileUI/', style: new TextStyle(
+                                size: 14,
+                            )),
+                        ),
+                    ],
+                ),
+            ),
+            bottomNavItems: [
+                ['label' => 'Home', 'icon' => 'Home01', 'route' => '/home'],
+                ['label' => 'Profile', 'icon' => 'UserCircle', 'route' => '/profile'],
+            ],
+        );
+    }
+}

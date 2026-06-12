@@ -1,0 +1,31 @@
+<?php
+
+namespace App\MobileUI\Stores;
+
+use FlutterPHP\UIBuilder\Actions\Store\ClearStoreAction;
+use FlutterPHP\UIBuilder\State\Store;
+
+class AuthStore extends Store
+{
+    public function name(): string
+    {
+        return 'auth';
+    }
+
+    public function initialState(): array
+    {
+        return [
+            'email' => '',
+            'password' => '',
+            'name' => '',
+            'passwordConfirmation' => '',
+        ];
+    }
+
+    public function actions(): array
+    {
+        return [
+            new ClearStoreAction('auth'),
+        ];
+    }
+}
