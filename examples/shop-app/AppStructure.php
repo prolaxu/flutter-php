@@ -1,0 +1,54 @@
+<?php
+
+namespace App\MobileUI;
+
+use App\MobileUI\Screens\CartScreen;
+use App\MobileUI\Screens\CheckoutScreen;
+use App\MobileUI\Screens\HomeScreen;
+use App\MobileUI\Screens\LoginScreen;
+use App\MobileUI\Screens\ProductDetailScreen;
+use App\MobileUI\Screens\ProfileScreen;
+use App\MobileUI\Screens\RegisterScreen;
+use App\MobileUI\Theme\AppTheme;
+use FlutterPHP\UIBuilder\Structure\AppCapabilities;
+use FlutterPHP\UIBuilder\Structure\AppEnvironment;
+use FlutterPHP\UIBuilder\Structure\AppManifest;
+use FlutterPHP\UIBuilder\Structure\BroadcastingConfig;
+use FlutterPHP\UIBuilder\Structure\Route;
+use FlutterPHP\UIBuilder\Structure\Router;
+
+class AppStructure
+{
+    public function toArray(): array { return $this->manifest()->toArray(); }
+    public function toJson(bool $pretty = true): string { return $this->manifest()->toJson($pretty); }
+
+    public function manifest(): AppManifest
+    {
+        $apiBaseUrl = config('flutter-php.api_base_url', 'http://localhost:8000/api');
+        $appEnv = config('flutter-php.app_env', 'local');
+
+        if ($appEnv === 'production' && str_starts_with($apiBaseUrl, 'http://')) {
+            throw new \RuntimeException('FLUTTER_API_BASE_URL must use HTTPS in production. Got: '.$apiBaseUrl);
+        }
+
+        return new AppManifest(
+            capabilities: AppCapabilities::standard(),
+            broadcasting: BroadcastingConfig::fromConfig(config('flutter-php.broadcasting', []), $apiBaseUrl),
+            theme: AppTheme::make(),
+            environment: new AppEnvironment(
+                name: config('flutter-php.app_env', 'local'),
+                apiBaseUrl: $apiBaseUrl,
+                showDebugBanner: config('flutter-php.show_debug_banner', false),
+                guestRedirectRoute: '/login',
+            ),
+            router: (new Router(initialRoute: '/home'))
+                ->addRoute((new Route('/home', HomeScreen::build())))
+                ->addRoute((new Route('/products/:id', ProductDetailScreen::build())))
+                ->addRoute((new Route('/cart', CartScreen::build()))->withStore(CartScreen::store()))
+                ->addRoute((new Route('/checkout', CheckoutScreen::build()))->withStore(CheckoutScreen::store())->requiresAuth())
+                ->addRoute((new Route('/login', LoginScreen::build()))->withStore(LoginScreen::store()))
+                ->addRoute((new Route('/register', RegisterScreen::build()))->withStore(RegisterScreen::store()))
+                ->addRoute((new Route('/profile', ProfileScreen::build()))->withStore(ProfileScreen::store())),
+        );
+    }
+}

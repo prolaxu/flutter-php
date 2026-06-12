@@ -1,0 +1,39 @@
+<?php
+
+namespace App\MobileUI\Screens;
+
+use App\MobileUI\Components\ShopBottomNav;
+use App\MobileUI\Stores\UserStore;
+use FlutterPHP\UIBuilder\Actions\ApiCallAction;
+use FlutterPHP\UIBuilder\Actions\NavigateAction;
+use FlutterPHP\UIBuilder\Actions\ShowNotificationAction;
+use FlutterPHP\UIBuilder\Actions\Store\ClearStoreAction;
+use FlutterPHP\UIBuilder\Base\UIComponent;
+use FlutterPHP\UIBuilder\Components\Column;
+use FlutterPHP\UIBuilder\Components\DynamicButton;
+use FlutterPHP\UIBuilder\Components\DynamicCard;
+use FlutterPHP\UIBuilder\Components\Padding;
+use FlutterPHP\UIBuilder\Components\Scaffold;
+use FlutterPHP\UIBuilder\Components\Spacer;
+use FlutterPHP\UIBuilder\Components\When;
+use FlutterPHP\UIBuilder\Primitives\Color;
+use FlutterPHP\UIBuilder\Primitives\FontWeight;
+use FlutterPHP\UIBuilder\Primitives\IconName;
+use FlutterPHP\UIBuilder\Primitives\Padding as PaddingPrimitive;
+use FlutterPHP\UIBuilder\Primitives\Text;
+use FlutterPHP\UIBuilder\Primitives\TextStyle;
+use FlutterPHP\UIBuilder\State\StoreRef;
+
+class ProfileScreen
+{
+    public static function build(): UIComponent
+    {
+        $store = new UserStore;
+        return new Scaffold(title: new Text('Profile'), showBackButton: false, body: new Padding(padding: PaddingPrimitive::all(16), child: new Column(children: [
+            new When(watch: new StoreRef($store->name(), 'isLoggedIn'), equals: true, child: new DynamicCard(title: new Text('{{store.user.name}}', style: new TextStyle(size: 20, weight: FontWeight::Bold)), subtitle: new Text('{{store.user.email}}', style: new TextStyle(size: 14, color: new Color('#64748B'))), icon: new IconName('UserCircle')), else: new DynamicCard(title: new Text('Guest', style: new TextStyle(size: 20, weight: FontWeight::Bold)), subtitle: new Text('Sign in to access your account', style: new TextStyle(size: 14, color: new Color('#64748B'))), icon: new IconName('UserCircle'))),
+            new Spacer(height: 24),
+            new When(watch: new StoreRef($store->name(), 'isLoggedIn'), equals: true, child: new DynamicButton(label: new Text('Sign Out'), style: 'outlined', action: new ApiCallAction(url: '/auth/logout', method: 'POST', onSuccess: new ClearStoreAction('user', onSuccess: new ShowNotificationAction('Signed out', 'Bye!', onSuccess: new NavigateAction('/home'))))), else: new DynamicButton(label: new Text('Sign In'), style: 'elevated', action: new NavigateAction('/login'))),
+        ])), bottomNavItems: ShopBottomNav::items());
+    }
+    public static function store(): UserStore { return new UserStore; }
+}

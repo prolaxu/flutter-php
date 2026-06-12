@@ -1,0 +1,47 @@
+<?php
+
+namespace App\MobileUI\Screens;
+
+use App\MobileUI\Stores\AuthStore;
+use FlutterPHP\UIBuilder\Actions\ApiCallAction;
+use FlutterPHP\UIBuilder\Actions\NavigateAction;
+use FlutterPHP\UIBuilder\Actions\NavigateAfterAuthAction;
+use FlutterPHP\UIBuilder\Actions\ShowNotificationAction;
+use FlutterPHP\UIBuilder\Actions\Store\ClearStoreAction;
+use FlutterPHP\UIBuilder\Base\UIComponent;
+use FlutterPHP\UIBuilder\Components\Column;
+use FlutterPHP\UIBuilder\Components\DynamicButton;
+use FlutterPHP\UIBuilder\Components\Padding;
+use FlutterPHP\UIBuilder\Components\Scaffold;
+use FlutterPHP\UIBuilder\Components\Spacer;
+use FlutterPHP\UIBuilder\Components\Text as TextComponent;
+use FlutterPHP\UIBuilder\Components\TextInput;
+use FlutterPHP\UIBuilder\Primitives\FontWeight;
+use FlutterPHP\UIBuilder\Primitives\Padding as PaddingPrimitive;
+use FlutterPHP\UIBuilder\Primitives\Text;
+use FlutterPHP\UIBuilder\Primitives\TextStyle;
+use FlutterPHP\UIBuilder\State\StoreRef;
+
+class RegisterScreen
+{
+    public static function build(): UIComponent
+    {
+        $store = new AuthStore;
+        return new Scaffold(title: new Text('Register'), showBackButton: true, body: new Padding(padding: PaddingPrimitive::all(16), child: new Column(crossAxisAlignment: 'stretch', children: [
+            new TextComponent(new Text('Create Account', style: new TextStyle(size: 24, weight: FontWeight::Bold))),
+            new Spacer(height: 24),
+            new TextInput(label: new Text('Name'), placeholder: new Text('Your name'), stateRef: new StoreRef($store->name(), 'name')),
+            new Spacer(height: 12),
+            new TextInput(label: new Text('Email'), placeholder: new Text('you@example.com'), stateRef: new StoreRef($store->name(), 'email'), keyboardType: 'email'),
+            new Spacer(height: 12),
+            new TextInput(label: new Text('Password'), placeholder: new Text('Min 8 chars'), stateRef: new StoreRef($store->name(), 'password'), obscureText: true),
+            new Spacer(height: 12),
+            new TextInput(label: new Text('Confirm'), placeholder: new Text('Repeat'), stateRef: new StoreRef($store->name(), 'passwordConfirmation'), obscureText: true),
+            new Spacer(height: 24),
+            new DynamicButton(label: new Text('Create Account'), style: 'elevated', action: new ApiCallAction(url: '/auth/register', method: 'POST', body: ['name' => '{{store.auth.name}}', 'email' => '{{store.auth.email}}', 'password' => '{{store.auth.password}}', 'password_confirmation' => '{{store.auth.passwordConfirmation}}'], resultMap: ['token' => 'user.token', 'user.name' => 'user.name', 'user.email' => 'user.email'], onSuccess: new ClearStoreAction('auth', onSuccess: new ShowNotificationAction('Welcome!', 'Account created', onSuccess: new NavigateAfterAuthAction('/profile'))), onError: new ShowNotificationAction('Failed', 'Check your details'))),
+            new Spacer(height: 16),
+            new DynamicButton(label: new Text('Already have an account? Sign in'), style: 'text', action: new NavigateAction('/login')),
+        ])));
+    }
+    public static function store(): AuthStore { return new AuthStore; }
+}
