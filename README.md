@@ -1,6 +1,6 @@
 # FlutterPHP
 
-Build Flutter mobile UIs entirely from PHP. Your app lives in `app/MobileUI/` — you never touch Flutter except to build and publish.
+Build Flutter mobile UIs entirely from PHP. Your app lives in `app/MobileUI/` — you never touch Flutter except to build and publish. Paired with [Flutter Kit](https://github.com/prolaxu/flutter-kit) renderer.
 
 ## How it works
 
@@ -13,19 +13,21 @@ You define screens, components, routes, stores, and theme in PHP classes. A CLI 
 ## Installation
 
 ```bash
-composer require nepicsoft/flutter-php
+composer require prolaxu/flutter-php
 ```
 
 The service provider auto-registers via Laravel package discovery.
 
+Pair with **[Flutter Kit](https://github.com/prolaxu/flutter-kit)** — the JSON-driven Flutter renderer.
+
 ## Quick start
 
 ```bash
-# Generate the UI manifest
-php artisan ui:generate-structure
+php artisan flutter-php:init-app MyApp
+php artisan flutter-php:generate-structure
 ```
 
-Serve at `GET /api/app-structure`. Point your Flutter renderer at this URL.
+Serve at `GET /api/app-structure`. Point your Flutter Kit at this URL.
 
 ## Structure
 
